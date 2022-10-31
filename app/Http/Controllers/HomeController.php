@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\PerguruanTinggi;
+use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,24 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        return view('website.home');
     }
+
+    public function perguruan()
+    {
+        return view('website.perguruan');
+    }
+    
+    public function json()
+    {
+        $data = PerguruanTinggi::get();
+        return DataTables::of($data)
+        ->make(true);
+    }
+
+    public function peta()
+    {
+        return view('website.peta');
+    }
+
 }

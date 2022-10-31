@@ -3,88 +3,112 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\PerguruanTinggi;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\File;
 class PerguruanTinggiController extends Controller
 {
     public function index()
     {
-        $data['perguruan']      = PeguruanTinggi::get()->orderBY('created_at', 'DESC')->get();
-        return view('website.data-perguruan-tinggi')->with($data);
+        return view('website.perguruan-tinggi.home');
+    }
+    
+    public function json()
+    {
+        $data = PerguruanTinggi::get();
+        return DataTables::of($data)
+        ->addIndexColumn()
+        ->addColumn('action', function($row){
+          $btn='
+          <a class="btn btn-sm" href="perguruan-tinggi/'.$row->id.'"><i class="fas fa-tools"></i></a>
+          <button data-id="'.$row->id.'"class="btn btn-sm delete"><i class="fas fa-trash-restore"></i></button>
+          ';
+          return $btn;
+        })
+        ->rawColumns(['action'])
+        ->make(true);
     }
 
+    public function create()
+    {
+        return view('website.perguruan-tinggi.create');
+    }
     public function store(Request $request)
     {
         $file                 = $request->file('gambar'); 
         if($file){
-            $filename         =  time() .'-'.$file->getClientOriginalExtension();
-            $path             = 'public/asset/perguruan';
+            $filename         =  time() .'.'.$file->getClientOriginalExtension();
+            $path             = 'public/img';
             $file->move($path,$filename);
             $data = [
-                'name'	      => $request->name,
                 'nama'	      => $request->nama,
                 'alamat'	  => $request->alamat,
-                'status'	      => $request->status,
-                'deskripsi'	      => $request->deskripsi,
-                'gambar'     => $filename,
+                'longitude'	  => $request->longitude,
+                'latitude'	  => $request->latitude,
+                'status'	  => $request->status,
+                'deskripsi'	  => $request->deskripsi,
+                'gambar'      => $filename,
             ];
         }else{
             $data = [
-                'name'	      => $request->name,
                 'nama'	      => $request->nama,
                 'alamat'	  => $request->alamat,
-                'status'	      => $request->status,
-                'deskripsi'	      => $request->deskripsi,
-                'gambar'     => '',
+                'longitude'	  => $request->longitude,
+                'latitude'	  => $request->latitude,
+                'status'	  => $request->status,
+                'deskripsi'	  => $request->deskripsi,
+                'gambar'      => '',
             ];
         }
-        PeguruanTinggi::create($data);
-        return redirect('website/perguruan')->with('success', 'Data Added Successfully');
+        PerguruanTinggi::create($data);
+        return redirect('perguruan-tinggi')->with('success', 'Data Added Successfully');
     }
 
     public function edit($id)
     {
-        $data['perguruan']       = PeguruanTinggi::find($id)->orderBY('created_at', 'status')->get();
-        return view('website.data-perguruan-tingginner')->with($data);
+        $data['perguruan']    = PerguruanTinggi::find($id);
+        return view('website.perguruan-tinggi.edit')->with($data);
     }
 
     public function update(Request $request, $id)
     {
         $file                 = $request->file('gambar');   
-        $gambarlama	      = $request->gambarlama;
+        $gambarlama	          = $request->gambarlama;
         if($file){
-            $filename         =  time() .'-'.$file->getClientOriginalExtension();
-            $path             = 'public/asset/perguruan';
+            $filename         =  time() .'.'.$file->getClientOriginalExtension();
+            $path             = 'public/img';
             $file->move($path,$filename);
             $data = [
-                'name'	      => $request->name,
                 'nama'	      => $request->nama,
                 'alamat'	  => $request->alamat,
-                'status'	      => $request->status,
-                'deskripsi'	      => $request->deskripsi,
-                'gambar'     => $filename,
+                'longitude'	  => $request->longitude,
+                'latitude'	  => $request->latitude,
+                'status'	  => $request->status,
+                'deskripsi'	  => $request->deskripsi,
+                'gambar'      => $filename,
             ];
-            File::delete('public/asset/banner/'.$gambarlama);
+            File::delete('public/img/'.$gambarlama);
         }else{
             $data = [
-                'name'	      => $request->name,
-                'nama'	      => $request->modul,
+                'nama'	      => $request->nama,
                 'alamat'	  => $request->alamat,
-                'status'	      => $request->status,
-                'deskripsi'	      => $request->deskripsi,
-                'gambar'     => $gambarlama,
+                'longitude'	  => $request->longitude,
+                'latitude'	  => $request->latitude,
+                'status'	  => $request->status,
+                'deskripsi'	  => $request->deskripsi,
+                'gambar'      => $gambarlama,
             ];
         }
         
-        PeguruanTinggi::where('id',$id)->update($data);
-        return redirect('website/perguruan')->with('success','Data updated successfully');
+        PerguruanTinggi::where('id',$id)->update($data);
+        return redirect('perguruan-tinggi')->with('success','Data updated successfully');
     }
-
 
     public function delete($id)
     {
-        $banner                = PeguruanTinggi::find($id);
-        File::delete('public/img/perguruan/'.$banner->gambar.'');
-        $banner->delete();
-        return redirect('website/perguruan');
+        $data                = PerguruanTinggi::find($id);
+        File::delete('public/img/'.$data->gambar);
+        $data->delete();
+        return redirect('perguruan-tinggi');
     } 
 }

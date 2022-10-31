@@ -18,13 +18,26 @@ class UserSeeder extends Seeder
     {
         User::create([
             'id'	    => 1,
-            'nama'	    => 'user1',
+            'name'	    => 'Admin',
+            'username'	=> 'admin',
+            'alamat'	=> 'Sorong',
+            'tgl_lahir'	=> Carbon::now(),
+            'jk'	    => 'L',
+            'email'	    => 'admin@gmail.com',
+            'password'	=> bcrypt('secret'),
+            'role'      => 'admin'
+        ]);
+
+        User::create([
+            'id'	    => 2,
+            'name'	    => 'user1',
             'username'	=> 'user1',
             'alamat'	=> 'Sorong',
             'tgl_lahir'	=> Carbon::now(),
             'jk'	    => 'L',
             'email'	    => 'user1@gmail.com',
-            'password'	=> bcrypt('secret')
+            'password'	=> bcrypt('secret'),
+            'role'      => 'user'
         ]);
     }
 }

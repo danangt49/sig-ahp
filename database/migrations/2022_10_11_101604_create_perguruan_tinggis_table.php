@@ -19,6 +19,8 @@ class CreatePerguruanTinggisTable extends Migration
             $table->text('alamat');
             $table->enum('status', ['Negeri', 'Swasta']);
             $table->text('gambar');
+            $table->text('longitude');
+            $table->text('latitude');
             $table->text('deskripsi');
             $table->timestamps();
         });
