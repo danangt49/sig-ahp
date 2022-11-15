@@ -5,14 +5,16 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^7.4",
+        "bardiz12/ahp": "dev-master",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "laravel/framework": "^8.75",
+        "laravel/framework": "^8.0",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
         "spatie/laravel-permission": "^5.5",
+        "stevebauman/location": "^6.5",
         "yajra/laravel-datatables-oracle": "^9.0"
     },
     "require-dev": {

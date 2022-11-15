@@ -40,8 +40,16 @@ class HomeController extends Controller
     }
 
     public function peta()
-    {
+    {   
         return view('website.peta');
+    }
+
+    public function ahp(Request $request) 
+    {
+        $userIp = $request->ip();
+        $locationData = \Location::get($userIp);
+        $data = PerguruanTinggi::get();
+        return view('website.hasil-ahp');
     }
 
 }

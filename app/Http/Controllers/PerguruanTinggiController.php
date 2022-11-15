@@ -13,6 +13,25 @@ class PerguruanTinggiController extends Controller
         return view('website.perguruan-tinggi.home');
     }
     
+    public function api () 
+    {
+        $result = PerguruanTinggi::get(); 
+        $original_data = json_decode($result, true);
+        $features = array();
+
+        foreach($original_data as $key => $value) { 
+            $features[] = array(
+                    'type' => 'Feature',
+                    'geometry' => array('type' => 'Point', 'coordinates' => array((float)$value['latitude'],(float)$value['longitude'])),
+                    'properties' => array('name' => $value['nama'], 'id' => $value['id']),
+                    );
+            };   
+
+        $allfeatures = array('type' => 'FeatureCollection', 'features' => $features);
+
+        return response()->json($allfeatures, 200)->withCallback('eqfeed_callback');
+    }
+
     public function json()
     {
         $data = PerguruanTinggi::get();
